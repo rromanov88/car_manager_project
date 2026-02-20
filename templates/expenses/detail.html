@@ -1,0 +1,89 @@
+{% extends 'common/base.html' %}
+
+{% block title %}Expense Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>Expense Details</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ expense.get_expense_type_display }}</h5>
+                <table class="table">
+                    <tr>
+                        <th>Car:</th>
+                        <td><a href="{% url 'cars:detail' slug=expense.car.slug %}">{{ expense.car }}</a></td>
+                    </tr>
+                    <tr>
+                        <th>Type:</th>
+                        <td>{{ expense.get_expense_type_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Amount:</th>
+                        <td><strong>${{ expense.amount|floatformat:2 }}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Date:</th>
+                        <td>{{ expense.date|date:"F d, Y" }}</td>
+                    </tr>
+                    {% if expense.mileage_at_expense %}
+                    <tr>
+                        <th>Mileage at Expense:</th>
+                        <td>{{ expense.mileage_at_expense|floatformat:0 }} miles</td>
+                    </tr>
+                    {% endif %}
+                    {% if expense.description %}
+                    <tr>
+                        <th>Description:</th>
+                        <td>{{ expense.description }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th>Created:</th>
+                        <td>{{ expense.created_at|date:"F d, Y H:i" }}</td>
+                    </tr>
+                </table>
+                
+                {% if expense.receipt_image %}
+                <div class="mt-3">
+                    <h6>Receipt:</h6>
+                    <img src="{{ expense.receipt_image.url }}" class="img-fluid" alt="Receipt" style="max-height: 400px;">
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if related_expenses %}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Other Expenses for {{ expense.car }}</h5>
+                <div class="list-group">
+                    {% for rel_expense in related_expenses %}
+                    <a href="{% url 'expenses:detail' pk=rel_expense.pk %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ rel_expense.get_expense_type_display }}</h6>
+                            <strong>${{ rel_expense.amount|floatformat:2 }}</strong>
+                        </div>
+                        <small>{{ rel_expense.date|date:"M d, Y" }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Actions</h5>
+                <a href="{% url 'expenses:edit' pk=expense.pk %}" class="btn btn-warning w-100 mb-2">Edit Expense</a>
+                <a href="{% url 'expenses:delete' pk=expense.pk %}" class="btn btn-danger w-100 mb-2">Delete Expense</a>
+                <a href="{% url 'cars:detail' slug=expense.car.slug %}" class="btn btn-primary w-100 mb-2">View Car</a>
+                <a href="{% url 'expenses:list' %}" class="btn btn-secondary w-100">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

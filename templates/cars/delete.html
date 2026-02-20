@@ -1,0 +1,28 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Delete {{ car }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h3>Confirm Deletion</h3>
+            </div>
+            <div class="card-body">
+                <p class="alert alert-warning">
+                    <strong>Warning!</strong> Are you sure you want to delete this car? 
+                    This will also delete all associated expenses. This action cannot be undone.
+                </p>
+                <h5>Car Details:</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    {% crispy form %}
+                </form>
+                <a href="{% url 'cars:detail' slug=car.slug %}" class="btn btn-secondary mt-3">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

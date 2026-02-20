@@ -1,0 +1,103 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}All Cars{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>All Cars</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Search & Filter</h5>
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        {{ search_form.query|as_crispy_field }}
+                    </div>
+                    <div class="col-md-2">
+                        {{ search_form.fuel_type|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ search_form.year_min|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ search_form.year_max|as_crispy_field }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                        <a href="{% url 'cars:list' %}" class="btn btn-secondary">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% if cars %}
+        {% for car in cars %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car }}</h5>
+                        <p class="card-text">
+                            <strong>Fuel:</strong> {{ car.get_fuel_type_display }}<br>
+                            <strong>Transmission:</strong> {{ car.get_transmission_display }}<br>
+                            <strong>Mileage:</strong> {{ car.current_mileage|floatformat:0 }} miles<br>
+                            <strong>Initial Value:</strong> ${{ car.initial_value|floatformat:2 }}<br>
+                            {% if car.total_expenses %}
+                                <strong>Total Expenses:</strong> ${{ car.total_expenses|floatformat:2 }}<br>
+                            {% endif %}
+                            {% if car.tags.all %}
+                                <strong>Tags:</strong> 
+                                {% for tag in car.tags.all %}
+                                    <span class="badge bg-secondary">{{ tag.name }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                        <a href="{% url 'cars:detail' slug=car.slug %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        <a href="{% url 'cars:edit' pk=car.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <p class="text-center">No cars found. <a href="{% url 'cars:create' %}">Add your first car</a></p>
+        </div>
+    {% endif %}
+</div>
+
+{% if cars.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if cars.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cars.previous_page_number }}">Previous</a>
+            </li>
+        {% endif %}
+        {% for num in cars.paginator.page_range %}
+            {% if cars.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if cars.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cars.next_page_number }}">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

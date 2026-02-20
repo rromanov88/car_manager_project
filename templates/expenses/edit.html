@@ -1,0 +1,17 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Edit Expense{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <h1>Edit Expense: {{ expense.get_expense_type_display }}</h1>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+        <a href="{% url 'expenses:detail' pk=expense.pk %}" class="btn btn-secondary mt-3">Cancel</a>
+    </div>
+</div>
+{% endblock %}

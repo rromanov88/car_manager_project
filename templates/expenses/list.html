@@ -1,0 +1,115 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Expenses List{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>All Expenses</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filter Expenses</h5>
+                <form method="get" class="row g-3">
+                    <div class="col-md-3">
+                        {{ filter_form.car|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ filter_form.expense_type|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ filter_form.date_from|as_crispy_field }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ filter_form.date_to|as_crispy_field }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a href="{% url 'expenses:list' %}" class="btn btn-secondary">Clear</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if total_amount %}
+<div class="alert alert-info">
+    <strong>Total Filtered Expenses:</strong> ${{ total_amount|floatformat:2 }}
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-12">
+        {% if expenses %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Car</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for expense in expenses %}
+                    <tr>
+                        <td>{{ expense.date|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'cars:detail' slug=expense.car.slug %}">{{ expense.car }}</a>
+                        </td>
+                        <td>{{ expense.get_expense_type_display }}</td>
+                        <td><strong>${{ expense.amount|floatformat:2 }}</strong></td>
+                        <td>{{ expense.description|truncatewords:10|default:"—" }}</td>
+                        <td>
+                            <a href="{% url 'expenses:detail' pk=expense.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{% url 'expenses:edit' pk=expense.pk %}" class="btn btn-sm btn-outline-warning">Edit</a>
+                            <a href="{% url 'expenses:delete' pk=expense.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-center">No expenses found. <a href="{% url 'expenses:create' %}">Add your first expense</a></p>
+        {% endif %}
+    </div>
+</div>
+
+{% if expenses.has_other_pages %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if expenses.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ expenses.previous_page_number }}">Previous</a>
+            </li>
+        {% endif %}
+        {% for num in expenses.paginator.page_range %}
+            {% if expenses.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        {% if expenses.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ expenses.next_page_number }}">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

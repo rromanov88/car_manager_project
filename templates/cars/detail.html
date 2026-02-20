@@ -1,0 +1,156 @@
+{% extends 'common/base.html' %}
+
+{% block title %}{{ car }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1>{{ car }}</h1>
+        <p class="lead">{{ car.get_fuel_type_display }} • {{ car.get_transmission_display }}</p>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Car Details</h5>
+                <table class="table">
+                    <tr>
+                        <th>Make:</th>
+                        <td>{{ car.make }}</td>
+                    </tr>
+                    <tr>
+                        <th>Model:</th>
+                        <td>{{ car.model }}</td>
+                    </tr>
+                    <tr>
+                        <th>Year:</th>
+                        <td>{{ car.year }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fuel Type:</th>
+                        <td>{{ car.get_fuel_type_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Transmission:</th>
+                        <td>{{ car.get_transmission_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Current Mileage:</th>
+                        <td>{{ car.current_mileage|floatformat:0 }} miles</td>
+                    </tr>
+                    <tr>
+                        <th>Initial Value:</th>
+                        <td>${{ car.initial_value|floatformat:2 }}</td>
+                    </tr>
+                    {% if car.color %}
+                    <tr>
+                        <th>Color:</th>
+                        <td>{{ car.color }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if car.license_plate %}
+                    <tr>
+                        <th>License Plate:</th>
+                        <td>{{ car.license_plate }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if car.vin %}
+                    <tr>
+                        <th>VIN:</th>
+                        <td>{{ car.vin }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if car.tags.all %}
+                    <tr>
+                        <th>Tags:</th>
+                        <td>
+                            {% for tag in car.tags.all %}
+                                <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endif %}
+                </table>
+                
+                {% if car.description %}
+                <div class="mt-3">
+                    <h6>Description:</h6>
+                    <p>{{ car.description }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Expense Statistics</h5>
+                {% if expense_stats.total %}
+                <table class="table">
+                    <tr>
+                        <th>Total Expenses:</th>
+                        <td>${{ expense_stats.total|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <th>Number of Expenses:</th>
+                        <td>{{ expense_stats.count }}</td>
+                    </tr>
+                    <tr>
+                        <th>Average Expense:</th>
+                        <td>${{ expense_stats.avg|floatformat:2 }}</td>
+                    </tr>
+                </table>
+                
+                {% if expenses_by_type %}
+                <h6 class="mt-3">Expenses by Type:</h6>
+                <ul class="list-group">
+                    {% for expense_type in expenses_by_type %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>{{ expense_type.expense_type }}</span>
+                        <span>${{ expense_type.total|floatformat:2 }} ({{ expense_type.count }} expense{{ expense_type.count|pluralize }})</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                {% else %}
+                <p>No expenses recorded yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Recent Expenses</h5>
+                {% if expenses %}
+                <div class="list-group">
+                    {% for expense in expenses %}
+                    <a href="{% url 'expenses:detail' pk=expense.pk %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ expense.get_expense_type_display }}</h6>
+                            <strong>${{ expense.amount|floatformat:2 }}</strong>
+                        </div>
+                        <p class="mb-1">{{ expense.date|date:"M d, Y" }}</p>
+                        {% if expense.description %}
+                        <small>{{ expense.description|truncatewords:10 }}</small>
+                        {% endif %}
+                    </a>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'expenses:create' %}?car={{ car.pk }}" class="btn btn-success mt-3">Add Expense</a>
+                {% else %}
+                <p>No expenses recorded yet. <a href="{% url 'expenses:create' %}?car={{ car.pk }}">Add your first expense</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Actions</h5>
+                <a href="{% url 'cars:edit' pk=car.pk %}" class="btn btn-warning w-100 mb-2">Edit Car</a>
+                <a href="{% url 'cars:delete' pk=car.pk %}" class="btn btn-danger w-100 mb-2">Delete Car</a>
+                <a href="{% url 'expenses:create' %}?car={{ car.pk }}" class="btn btn-success w-100 mb-2">Add Expense</a>
+                <a href="{% url 'cars:list' %}" class="btn btn-secondary w-100">Back to List</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
