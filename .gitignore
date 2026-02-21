@@ -42,9 +42,9 @@ db.sqlite3-journal
 *.pyc
 
 # Django migrations 
-*/migrations/*.py
-*/migrations/*.pyc
-!*/migrations/__init__.py
+#*/migrations/*.py
+#*/migrations/*.pyc
+#!*/migrations/__init__.py
 
 # Environment variables
 .env

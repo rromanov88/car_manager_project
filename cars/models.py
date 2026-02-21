@@ -9,7 +9,6 @@ from cars.validators import year_validator, vin_validator
 
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    # cars = models.ManyToManyField('Car', related_name='tags', blank=True)
 
     def __str__(self):
         return self.name
