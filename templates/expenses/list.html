@@ -40,7 +40,7 @@
 
 {% if total_amount %}
 <div class="alert alert-info">
-    <strong>Total Filtered Expenses:</strong> ${{ total_amount|floatformat:2 }}
+    <strong>Total Filtered Expenses:</strong> €{{ total_amount|floatformat:2 }}
 </div>
 {% endif %}
 
@@ -67,7 +67,7 @@
                             <a href="{% url 'cars:detail' slug=expense.car.slug %}">{{ expense.car }}</a>
                         </td>
                         <td>{{ expense.get_expense_type_display }}</td>
-                        <td><strong>${{ expense.amount|floatformat:2 }}</strong></td>
+                        <td><strong>€{{ expense.amount|floatformat:2 }}</strong></td>
                         <td>{{ expense.description|truncatewords:10|default:"—" }}</td>
                         <td>
                             <a href="{% url 'expenses:detail' pk=expense.pk %}" class="btn btn-sm btn-outline-primary">View</a>

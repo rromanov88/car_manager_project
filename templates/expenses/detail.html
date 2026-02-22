@@ -21,16 +21,16 @@
                     </tr>
                     <tr>
                         <th>Amount:</th>
-                        <td><strong>${{ expense.amount|floatformat:2 }}</strong></td>
+                        <td><strong>€{{ expense.amount|floatformat:2 }}</strong></td>
                     </tr>
                     <tr>
                         <th>Date:</th>
                         <td>{{ expense.date|date:"F d, Y" }}</td>
                     </tr>
-                    {% if expense.mileage_at_expense %}
+                    {% if expense.odometer_reading_at_expense %}
                     <tr>
-                        <th>Mileage at Expense:</th>
-                        <td>{{ expense.mileage_at_expense|floatformat:0 }} miles</td>
+                        <th>Odometer Reading at Expense:</th>
+                        <td>{{ expense.odometer_reading_at_expense|floatformat:0 }} km</td>
                     </tr>
                     {% endif %}
                     {% if expense.description %}
@@ -63,7 +63,7 @@
                     <a href="{% url 'expenses:detail' pk=rel_expense.pk %}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ rel_expense.get_expense_type_display }}</h6>
-                            <strong>${{ rel_expense.amount|floatformat:2 }}</strong>
+                            <strong>€{{ rel_expense.amount|floatformat:2 }}</strong>
                         </div>
                         <small>{{ rel_expense.date|date:"M d, Y" }}</small>
                     </a>

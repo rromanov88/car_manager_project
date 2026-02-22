@@ -26,7 +26,7 @@ class CarForm(forms.ModelForm):
         max_digits=10,
         decimal_places=2,
         widget=forms.NumberInput(attrs={'step': '0.01', 'placeholder': 'Purchase price'}),
-        label='Initial Value (USD)',
+        label='Initial Value (Euro)',
         help_text='The price you paid for the car'
     )
 
@@ -34,7 +34,7 @@ class CarForm(forms.ModelForm):
         model = Car
         fields = [
             'make', 'model', 'year', 'fuel_type', 'transmission',
-            'initial_value', 'current_mileage', 'color', 'license_plate',
+            'initial_value', 'current_odometer_reading', 'color', 'license_plate',
             'vin', 'description', 'tags'
         ]
         exclude = ['slug']
@@ -45,7 +45,7 @@ class CarForm(forms.ModelForm):
             'license_plate': forms.TextInput(attrs={'placeholder': 'e.g., ABC-1234'}),
             'vin': forms.TextInput(attrs={'placeholder': '17-character VIN', 'maxlength': '17'}),
             'description': forms.Textarea(attrs={'placeholder': 'Additional details about the car', 'rows': 4}),
-            'current_mileage': forms.NumberInput(attrs={'placeholder': 'Current mileage in miles', 'min': '0'}),
+            'current_odometer_reading': forms.NumberInput(attrs={'placeholder': 'Current Odometer Reading in km', 'min': '0'}),
             'fuel_type': forms.Select(attrs={'class': 'form-select'}),
             'transmission': forms.Select(attrs={'class': 'form-select'}),
         }
@@ -91,17 +91,17 @@ class CarForm(forms.ModelForm):
     def clean(self):
         cleaned = super().clean()
         year = cleaned.get('year')
-        current_mileage = cleaned.get('current_mileage', 0)
+        current_odometer_reading = cleaned.get('current_odometer_reading', 0)
         
-        # Validate mileage is reasonable for the car's age
-        if year and current_mileage:
+        # Validate Odometer Reading is reasonable for the car's age
+        if year and current_odometer_reading:
             current_year = date.today().year
             age = current_year - year
             if age > 0:
-                avg_miles_per_year = current_mileage / age
-                if avg_miles_per_year > 200000:
+                avg_km_per_year = current_odometer_reading / age
+                if avg_km_per_year > 350000:
                     raise ValidationError({
-                        'current_mileage': 'Mileage seems unusually high for a car of this age.'
+                        'current_odometer_reading': 'Odometer Reading seems unusually high for a car of this age.'
                     })
         
         return cleaned

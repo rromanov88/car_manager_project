@@ -19,11 +19,11 @@ class Expense(TimeStampModel):
         max_digits=10,
         decimal_places=2,
         validators=[MinValueValidator(0.01, message='Amount must be greater than 0')],
-        help_text='Expense amount in USD'
+        help_text='Expense amount in Euro'
     )
     date = models.DateField()
     description = models.TextField(blank=True, help_text='Additional details about the expense')
-    mileage_at_expense = models.PositiveIntegerField(null=True, blank=True, help_text='Car mileage when expense occurred')
+    odometer_reading_at_expense = models.PositiveIntegerField(null=True, blank=True, help_text='Car odometer reading when expense occurred')
     receipt_image = models.ImageField(upload_to='expense_receipts/', blank=True, null=True)
 
     def __str__(self):

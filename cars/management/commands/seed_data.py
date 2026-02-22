@@ -14,7 +14,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Starting to seed data...'))
 
         # Create tags
-        tags_data = ['Family Car', 'Work Vehicle', 'Weekend Car', 'Project Car', 'Daily Driver']
+        tags_data = ['Family Car', 'Work Vehicle', 'Weekend Car', 'Project Car', 'Daily Driver', 'Sporty', 'Hatchback', 'Enthusiast']
         tags = []
         for tag_name in tags_data:
             tag, created = Tag.objects.get_or_create(name=tag_name)
@@ -25,18 +25,18 @@ class Command(BaseCommand):
         # Create cars
         cars_data = [
             {
-                'make': 'Toyota',
-                'model': 'Camry',
-                'year': 2020,
-                'fuel_type': 'Petrol',
+                'make': 'Mazda',
+                'model': 'CX-5',
+                'year': 2026,
+                'fuel_type': 'Gasoline',
                 'transmission': 'Automatic',
-                'initial_value': 25000.00,
-                'current_mileage': 45000,
-                'color': 'Silver',
-                'license_plate': 'ABC-1234',
-                'vin': '1HGBH41JXMN109186',
-                'description': 'Reliable daily driver, well maintained.',
-                'tags': ['Family Car', 'Daily Driver']
+                'initial_value': 31500.00,
+                'current_odometer_reading': 5000,
+                'color': 'Soul Red Crystal',
+                'license_plate': 'MZD-2026',
+                'vin': 'JM3KF1DY7R0123456',
+                'description': 'Stylish crossover with a premium interior and agile handling.',
+                'tags': ['Work Vehicle','Family Car', 'Daily Driver']
             },
             {
                 'make': 'Honda',
@@ -45,26 +45,26 @@ class Command(BaseCommand):
                 'fuel_type': 'Petrol',
                 'transmission': 'Manual',
                 'initial_value': 18000.00,
-                'current_mileage': 62000,
+                'current_odometer_reading': 100000,
                 'color': 'Blue',
                 'license_plate': 'XYZ-5678',
                 'vin': '2HGFB2F59EH501234',
-                'description': 'Sporty and fun to drive.',
-                'tags': ['Weekend Car']
+                'description': 'Compact and reliable car for small families or teenagers.',
+                'tags': ['Hatchback', 'Family Car', 'Daily Driver']
             },
             {
-                'make': 'Ford',
-                'model': 'F-150',
+                'make': 'Honda',
+                'model': 'CR-V',
                 'year': 2021,
                 'fuel_type': 'Diesel',
                 'transmission': 'Automatic',
                 'initial_value': 45000.00,
-                'current_mileage': 28000,
+                'current_odometer_reading': 40000,
                 'color': 'Black',
                 'license_plate': 'TRK-9999',
                 'vin': '1FTFW1ET5MFC12345',
-                'description': 'Powerful truck for work and towing.',
-                'tags': ['Work Vehicle']
+                'description': 'Great SUV for bigger families.',
+                'tags': ['Work Vehicle', 'Family Car', 'Daily Driver']
             },
             {
                 'make': 'Tesla',
@@ -73,26 +73,26 @@ class Command(BaseCommand):
                 'fuel_type': 'Electric',
                 'transmission': 'Automatic',
                 'initial_value': 48000.00,
-                'current_mileage': 15000,
+                'current_odometer_reading': 25000,
                 'color': 'White',
                 'license_plate': 'ELC-2022',
                 'vin': '5YJ3E1EA8NF123456',
-                'description': 'Modern electric vehicle, great for commuting.',
+                'description': 'Modern electric vehicle, great for commuting and families.',
                 'tags': ['Daily Driver', 'Family Car']
             },
             {
-                'make': 'BMW',
-                'model': '3 Series',
-                'year': 2019,
-                'fuel_type': 'Petrol',
+                'make': 'Volkswagen',
+                'model': 'Golf GTI',
+                'year': 2026,
+                'fuel_type': 'Gasoline',
                 'transmission': 'Automatic',
                 'initial_value': 35000.00,
-                'current_mileage': 55000,
-                'color': 'Black',
-                'license_plate': 'BMW-2019',
-                'vin': 'WBA3A5C59EK123456',
-                'description': 'Luxury sedan with great performance.',
-                'tags': ['Weekend Car']
+                'current_odometer_reading': 15000,
+                'color': 'Kings Red Metallic',
+                'license_plate': 'GTI-FAST',
+                'vin': 'WVWZZZCDZRW123456',
+                'description': 'Ultimate performance hatchback blending speed with everyday utility.',
+                'tags': ['Sporty', 'Hatchback', 'Enthusiast']
             },
 
         ]
@@ -146,7 +146,7 @@ class Command(BaseCommand):
                     amount = round(random.uniform(10.00, 100.00), 2)
                 
                 description = random.choice(expense_descriptions[expense_type])
-                mileage = car.current_mileage - random.randint(0, int(car.current_mileage * 0.3))
+                odometer_reading = car.current_odometer_reading - random.randint(0, int(car.current_odometer_reading * 0.4))
                 
                 Expense.objects.create(
                     car=car,
@@ -154,7 +154,7 @@ class Command(BaseCommand):
                     amount=amount,
                     date=expense_date,
                     description=description,
-                    mileage_at_expense=mileage if mileage > 0 else None
+                    odometer_reading_at_expense=odometer_reading if odometer_reading > 0 else None
                 )
 
         self.stdout.write(self.style.SUCCESS(f'Successfully seeded data!'))

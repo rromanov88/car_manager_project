@@ -148,11 +148,11 @@ The following database credentials are configured in `settings.py`:
 ## Models
 
 ### Car Model
-- **Fields**: make, model, year, fuel_type, transmission, initial_value, current_mileage, color, license_plate, vin, description, slug
+- **Fields**: make, model, year, fuel_type, transmission, initial_value, current_odometer_reading, color, license_plate, vin, description, slug
 - **Relationships**: Many-to-Many with Tag, One-to-Many with Expense
 
 ### Expense Model
-- **Fields**: car (ForeignKey), expense_type, amount, date, description, mileage_at_expense, receipt_image
+- **Fields**: car (ForeignKey), expense_type, amount, date, description, odometer_reading_at_expense, receipt_image
 - **Relationships**: Many-to-One with Car
 
 ### Tag Model
@@ -176,12 +176,12 @@ The following database credentials are configured in `settings.py`:
 - VIN must be exactly 17 alphanumeric characters
 - License plate must be unique
 - VIN must be unique
-- Mileage validation based on car age
+- Odometer Reading validation based on car age
 
 ### Expense Validations
 - Amount must be greater than 0
 - Date cannot be in the future
-- Mileage cannot be negative
+- Odometer Reading cannot be negative
 
 ## Templates
 

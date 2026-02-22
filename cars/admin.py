@@ -10,7 +10,7 @@ class TagAdmin(admin.ModelAdmin):
 
 @admin.register(Car)
 class CarAdmin(admin.ModelAdmin):
-    list_display = ['make', 'model', 'year', 'fuel_type', 'current_mileage', 'initial_value']
+    list_display = ['make', 'model', 'year', 'fuel_type', 'current_odometer_reading', 'initial_value']
     list_filter = ['fuel_type', 'transmission', 'year']
     search_fields = ['make', 'model', 'license_plate', 'vin']
     prepopulated_fields = {'slug': ('make', 'model', 'year')}

@@ -19,18 +19,18 @@ class ExpenseForm(forms.ModelForm):
         max_digits=10,
         decimal_places=2,
         widget=forms.NumberInput(attrs={'step': '0.01', 'placeholder': '0.00', 'min': '0.01'}),
-        label='Amount (USD)',
+        label='Amount (Euro)',
         help_text='Expense amount'
     )
-    mileage_at_expense = forms.IntegerField(
+    odometer_reading_at_expense = forms.IntegerField(
         required=False,
-        widget=forms.NumberInput(attrs={'placeholder': 'Optional: mileage when expense occurred', 'min': '0'}),
-        help_text='Car mileage at the time of expense (optional)'
+        widget=forms.NumberInput(attrs={'placeholder': 'Optional: Odometer Reading when expense occurred', 'min': '0'}),
+        help_text='Car Odometer Reading at the time of expense (optional)'
     )
 
     class Meta:
         model = Expense
-        fields = ['car', 'expense_type', 'amount', 'date', 'description', 'mileage_at_expense', 'receipt_image']
+        fields = ['car', 'expense_type', 'amount', 'date', 'description', 'odometer_reading_at_expense', 'receipt_image']
         widgets = {
             'car': forms.Select(attrs={'class': 'form-select'}),
             'expense_type': forms.Select(attrs={'class': 'form-select'}),
@@ -65,29 +65,29 @@ class ExpenseForm(forms.ModelForm):
                 raise ValidationError('Expense date cannot be in the future.')
         return expense_date
 
-    def clean_mileage_at_expense(self):
-        mileage = self.cleaned_data.get('mileage_at_expense')
+    def clean_odometer_reading_at_expense(self):
+        odometer_reading = self.cleaned_data.get('odometer_reading_at_expense')
         car = self.cleaned_data.get('car')
         
-        if mileage is not None and car:
-            if mileage < 0:
-                raise ValidationError('Mileage cannot be negative.')
-            # Warn if mileage is less than car's current mileage (but allow it for historical data)
-            if mileage > car.current_mileage:
-                # This is okay - might be updating mileage
+        if odometer_reading is not None and car:
+            if odometer_reading < 0:
+                raise ValidationError('Odometer Reading cannot be negative.')
+            # Warn if Odometer Reading is less than car's current Odometer Reading (but allow it for historical data)
+            if odometer_reading > car.current_odometer_reading:
+                # This is okay - might be updating Odometer Reading
                 pass
-        return mileage
+        return odometer_reading
 
     def clean(self):
         cleaned = super().clean()
         car = cleaned.get('car')
-        mileage_at_expense = cleaned.get('mileage_at_expense')
+        odometer_reading_at_expense = cleaned.get('odometer_reading_at_expense')
         expense_date = cleaned.get('date')
         
-        if car and mileage_at_expense and expense_date:
-            # If mileage is provided, it should be reasonable
-            if mileage_at_expense > car.current_mileage:
-                # Allow if it's a recent expense and we're updating mileage
+        if car and odometer_reading_at_expense and expense_date:
+            # If Odometer Reading is provided, it should be reasonable
+            if odometer_reading_at_expense > car.current_odometer_reading:
+                # Allow if it's a recent expense and we're updating Odometer Reading
                 pass
         
         return cleaned
