@@ -1,5 +1,6 @@
 {% extends 'common/base.html' %}
 {% load crispy_forms_tags %}
+{% load car_filters %}
 
 {% block title %}All Cars{% endblock %}
 
@@ -48,10 +49,10 @@
                         <p class="card-text">
                             <strong>Fuel:</strong> {{ car.get_fuel_type_display }}<br>
                             <strong>Transmission:</strong> {{ car.get_transmission_display }}<br>
-                            <strong>Odometer Reading:</strong> {{ car.current_odometer_reading|floatformat:0 }} km<br>
-                            <strong>Initial Value:</strong> €{{ car.initial_value|floatformat:2 }}<br>
+                            <strong>Odometer Reading:</strong> {{ car.current_odometer_reading|km }}<br>
+                            <strong>Initial Value:</strong> {{ car.initial_value|currency }}<br>
                             {% if car.total_expenses %}
-                                <strong>Total Expenses:</strong> €{{ car.total_expenses|floatformat:2 }}<br>
+                                <strong>Total Expenses:</strong> {{ car.total_expenses|currency }}<br>
                             {% endif %}
                             {% if car.tags.all %}
                                 <strong>Tags:</strong> 

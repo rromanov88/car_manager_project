@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load car_filters %}
 
 {% block title %}Expense Details{% endblock %}
 
@@ -21,7 +22,7 @@
                     </tr>
                     <tr>
                         <th>Amount:</th>
-                        <td><strong>€{{ expense.amount|floatformat:2 }}</strong></td>
+                        <td><strong>{{ expense.amount|currency }}</strong></td>
                     </tr>
                     <tr>
                         <th>Date:</th>
@@ -30,7 +31,7 @@
                     {% if expense.odometer_reading_at_expense %}
                     <tr>
                         <th>Odometer Reading at Expense:</th>
-                        <td>{{ expense.odometer_reading_at_expense|floatformat:0 }} km</td>
+                        <td>{{ expense.odometer_reading_at_expense|km }}</td>
                     </tr>
                     {% endif %}
                     {% if expense.description %}
@@ -63,7 +64,7 @@
                     <a href="{% url 'expenses:detail' pk=rel_expense.pk %}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ rel_expense.get_expense_type_display }}</h6>
-                            <strong>€{{ rel_expense.amount|floatformat:2 }}</strong>
+                            <strong>{{ rel_expense.amount|currency }}</strong>
                         </div>
                         <small>{{ rel_expense.date|date:"M d, Y" }}</small>
                     </a>

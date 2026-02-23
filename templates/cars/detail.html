@@ -1,4 +1,5 @@
 {% extends 'common/base.html' %}
+{% load car_filters %}
 
 {% block title %}{{ car }}{% endblock %}
 
@@ -34,16 +35,16 @@
                     </tr>
                     <tr>
                         <th>Current odometer reading:</th>
-                        <td>{{ car.current_odometer_reading|floatformat:0 }} km</td>
+                        <td>{{ car.current_odometer_reading|km }}</td>
                     </tr>
                     <tr>
                         <th>Initial Value:</th>
-                        <td>€{{ car.initial_value|floatformat:2 }}</td>
+                        <td>{{ car.initial_value|currency }}</td>
                     </tr>
                     {% if car.color %}
                     <tr>
                         <th>Color:</th>
-                        <td>{{ car.color }}</td>
+                        <td>{{ car.color|color_badge }}</td>
                     </tr>
                     {% endif %}
                     {% if car.license_plate %}
@@ -86,7 +87,7 @@
                 <table class="table">
                     <tr>
                         <th>Total Expenses:</th>
-                        <td>€{{ expense_stats.total|floatformat:2 }}</td>
+                        <td>{{ expense_stats.total|currency }}</td>
                     </tr>
                     <tr>
                         <th>Number of Expenses:</th>
@@ -94,7 +95,7 @@
                     </tr>
                     <tr>
                         <th>Average Expense:</th>
-                        <td>€{{ expense_stats.avg|floatformat:2 }}</td>
+                        <td>{{ expense_stats.avg|currency }}</td>
                     </tr>
                 </table>
                 
@@ -104,7 +105,7 @@
                     {% for expense_type in expenses_by_type %}
                     <li class="list-group-item d-flex justify-content-between">
                         <span>{{ expense_type.expense_type }}</span>
-                        <span>€{{ expense_type.total|floatformat:2 }} ({{ expense_type.count }} expense{{ expense_type.count|pluralize }})</span>
+                        <span>{{ expense_type.total|currency }} ({{ expense_type.count }} expense{{ expense_type.count|pluralize }})</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -124,7 +125,7 @@
                     <a href="{% url 'expenses:detail' pk=expense.pk %}" class="list-group-item list-group-item-action">
                         <div class="d-flex w-100 justify-content-between">
                             <h6 class="mb-1">{{ expense.get_expense_type_display }}</h6>
-                            <strong>€{{ expense.amount|floatformat:2 }}</strong>
+                            <strong>{{ expense.amount|currency }}</strong>
                         </div>
                         <p class="mb-1">{{ expense.date|date:"M d, Y" }}</p>
                         {% if expense.description %}
